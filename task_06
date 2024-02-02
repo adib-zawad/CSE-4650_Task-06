@@ -1,0 +1,30 @@
+
+
+CC = gcc
+CFLAGS = -Wall -Werror -O3 -fsanitize=address -fsanitize=undefined
+SRC_FILES = test_reverse.c reverse.c
+OBJ_FILES = test_reverse.o reverse.o
+HEADER_FILES = reverse.h
+TARGET = reverse_test
+
+all: $(TARGET)
+
+$(TARGET): $(OBJ_FILES) $(HEADER_FILES)
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_reverse.o: test_reverse.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+reverse.o: reverse.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(TARGET) $(OBJ_FILES)
+
+format:
+	clang-format -style=Google -i $(SRC_FILES) $(HEADER_FILES)
+
+check: $(TARGET)
+	./$(TARGET)
+
+.PHONY: all clean format check
